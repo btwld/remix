@@ -13,7 +13,7 @@ part of 'callout.dart';
 /// size, the intent's icon, the text colors, then the variant's fill and frame.
 ///
 /// [highContrast], or the theme's high contrast, moves the icon and text to
-/// the foreground and the frames to the control border.
+/// the foreground and the frames to gray 10, which holds 3:1 on the card.
 class FortalCallout extends StatelessWidget {
   const FortalCallout({
     super.key,
