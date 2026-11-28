@@ -468,6 +468,16 @@ Convenience setters for the header and footer text style or color.
 
 Styles the sort indicator and the gap between it and its label.
 
+#### `onSorted(DataTableStyler value)` / `onSortedAscending(DataTableStyler value)` / `onSortedDescending(DataTableStyler value)`
+
+Styles the header cell and every body cell of the column named by `sort`, for
+example to tint the sorted column or to show its indicator. The direction
+variants apply only while the sort runs that way. Pass one icon for all three
+sort icons and rotate it in `onSortedDescending` to turn a single arrow
+instead of swapping glyphs. The selection column and the outer container never
+match. Widget-state variants such as `onHovered` and `onSelected` take
+precedence on shared properties.
+
 #### `footer(FlexBoxStyler value)`
 
 Styles the pagination footer, including its inter-control spacing.
