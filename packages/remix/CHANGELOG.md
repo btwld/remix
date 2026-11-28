@@ -94,6 +94,9 @@
   starts, so `MenuTriggerStyler().onSelected(...)` styles the open trigger.
 - Add `RemixMenuTrigger.trailingIcon` and `MenuTriggerSpec.trailingIcon`. The
   default trigger shows an icon after its label when either sets one.
+- Add `MenuSpec.positioning`. `RemixMenu.positioning` is now optional; when
+  it is omitted, the style's positioning places the root panel, then the
+  previous default.
 
 ### Fixes
 

@@ -377,6 +377,8 @@ for Overlay, Navigator and toast scope placement.
   `MenuTriggerStyler().onSelected(...)`. `RemixMenuTrigger(trailingIcon:)`
   adds an icon after the label, styled by `MenuTriggerStyler().trailingIcon`,
   which can also set the glyph (`IconStyler().icon(...)`) for a preset chevron.
+  Root panel placement comes from `RemixMenu.positioning` when passed,
+  otherwise from `MenuStyler().positioning(OverlayPositionConfig(...))`.
   Show a keyboard shortcut or count on a row with `trailingText:` (ordinary,
   checkbox, radio, and submenu items) rather than a hand-built row; style it
   with `MenuItemStyler().trailingText(...)`, which inherits the label style.

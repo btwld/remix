@@ -27,7 +27,7 @@ class HeroUiDropdown<T> extends StatelessWidget {
     this.useRootOverlay = false,
     this.closeOnClickOutside = true,
     this.triggerFocusNode,
-    this.positioning = const OverlayPositionConfig(),
+    this.positioning,
     this.semanticLabel,
     this.excludeSemantics = false,
   });
@@ -60,7 +60,7 @@ class HeroUiDropdown<T> extends StatelessWidget {
 
   final FocusNode? triggerFocusNode;
 
-  final OverlayPositionConfig positioning;
+  final OverlayPositionConfig? positioning;
 
   final String? semanticLabel;
 

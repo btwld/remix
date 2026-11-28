@@ -274,6 +274,29 @@ final chevronTrigger = MenuStyler().trigger(
 );
 ```
 
+## Placement from a style
+
+`RemixMenu.positioning` places the root panel. When the constructor gets
+none, the style's `positioning` applies, so a preset recipe can own the side,
+alignment, offsets, and collision padding:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final endAlignedMenu = MenuStyler().positioning(
+  const OverlayPositionConfig(
+    alignment: OverlayAlignment.end,
+    sideOffset: 6,
+    collisionPadding: EdgeInsets.all(12),
+  ),
+);
+```
+
+An explicit `positioning` argument wins over the style. Without either, the
+panel opens below the trigger, aligned to its start. Submenus keep their own
+`RemixMenuSubmenu.positioning`.
+
 ## Open trigger state
 
 While the menu is open, the default trigger and a `RemixMenuTrigger.builder`
@@ -818,7 +841,7 @@ RemixMenu<T> remixMenuConstructor<T>({
   bool useRootOverlay = false,
   bool closeOnClickOutside = true,
   FocusNode? triggerFocusNode,
-  OverlayPositionConfig positioning = const OverlayPositionConfig(),
+  OverlayPositionConfig? positioning,
   String? semanticLabel,
   bool excludeSemantics = false,
   MenuStyler style = const MenuStyler.create(),
@@ -893,9 +916,9 @@ Optional. Whether taps outside the overlay close the menu.
 
 Optional. Optional focus node for the trigger. A `RemixMenuTrigger.control` receives it as `menu.focusNode`; without one the menu creates and disposes a node for the control.
 
-#### `positioning` → `OverlayPositionConfig`
+#### `positioning` → `OverlayPositionConfig?`
 
-Optional. Overlay positioning configuration.
+Optional. Where the root panel opens relative to the trigger. When omitted, the style's `positioning` applies, then the default below the trigger, aligned to its start.
 
 #### `semanticLabel` → `String?`
 

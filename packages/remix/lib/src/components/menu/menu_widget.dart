@@ -448,12 +448,13 @@ class RemixMenu<T> extends StatefulWidget {
     this.useRootOverlay = false,
     this.closeOnClickOutside = true,
     this.triggerFocusNode,
-    this.positioning = const OverlayPositionConfig(),
+    OverlayPositionConfig? positioning,
     this.semanticLabel,
     this.excludeSemantics = false,
     this.style = const MenuStyler.create(),
     this.styleSpec,
-  });
+  }) : positioning = positioning ?? const OverlayPositionConfig(),
+       _usesDefaultPositioning = positioning == null;
 
   /// Trigger configuration for the menu's button.
   ///
@@ -507,8 +508,13 @@ class RemixMenu<T> extends StatefulWidget {
   /// the control.
   final FocusNode? triggerFocusNode;
 
-  /// Overlay positioning configuration.
+  /// Where the panel opens relative to the trigger.
+  ///
+  /// When omitted, the style's [MenuSpec.positioning] applies, and without
+  /// one the panel opens below the trigger, aligned to its start.
   final OverlayPositionConfig positioning;
+
+  final bool _usesDefaultPositioning;
 
   /// The semantic label for the menu trigger.
   ///
@@ -603,6 +609,21 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
     );
   }
 
+  // Reads only the positioning property: resolving the whole menu style
+  // here would build item styles outside the overlay that scopes them.
+  OverlayPositionConfig _resolvePositioning(
+    BuildContext context,
+    MenuStyler style,
+  ) {
+    if (!widget._usesDefaultPositioning) return widget.positioning;
+    final raw = widget.styleSpec;
+    if (raw != null) return raw.positioning ?? widget.positioning;
+    final inherited = Style.maybeOf<MenuSpec>(context);
+    final effective = inherited is MenuStyler ? inherited.merge(style) : style;
+    return MixOps.resolve(context, effective.$positioning) ??
+        widget.positioning;
+  }
+
   @override
   Widget build(BuildContext context) {
     final style = _buildStyle();
@@ -666,7 +687,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>>
       triggerFocusNode: control == null
           ? widget.triggerFocusNode
           : _controlFocusNode,
-      positioning: widget.positioning,
+      positioning: _resolvePositioning(context, style),
       constrainToAvailableSpace: true,
       semanticLabel: _resolvedTriggerSemanticLabel,
       excludeSemantics: widget.excludeSemantics,

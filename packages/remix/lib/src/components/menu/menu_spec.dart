@@ -135,6 +135,15 @@ class MenuSpec with _$MenuSpec {
   @override
   final RemixPanelTransition? panelTransition;
 
+  /// Where the root panel opens relative to the trigger: side, alignment,
+  /// offsets and collision padding.
+  ///
+  /// An explicit [RemixMenu.positioning] wins. `null` opens the panel below
+  /// the trigger, aligned to its start. The menu reads the style's base
+  /// value, so variants do not change it. Submenu panels are not affected.
+  @override
+  final OverlayPositionConfig? positioning;
+
   /// Creates a menu spec with default empty child specs.
   const MenuSpec({
     StyleSpec<MenuTriggerSpec>? trigger,
@@ -147,6 +156,7 @@ class MenuSpec with _$MenuSpec {
     this.sectionLabel,
     StyleSpec<DividerSpec>? divider,
     this.panelTransition,
+    this.positioning,
   }) : trigger = trigger ?? const StyleSpec(spec: MenuTriggerSpec()),
        overlay = overlay ?? const StyleSpec(spec: FlexBoxSpec()),
        item = item ?? const StyleSpec(spec: MenuItemSpec()),
@@ -201,6 +211,7 @@ class MenuSpec with _$MenuSpec {
       ),
       divider: generated.divider,
       panelTransition: generated.panelTransition,
+      positioning: generated.positioning,
     );
   }
 }

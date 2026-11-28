@@ -121,6 +121,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
   StyleSpec<MenuItemSpec>? get sectionLabel;
   StyleSpec<DividerSpec> get divider;
   RemixPanelTransition? get panelTransition;
+  OverlayPositionConfig? get positioning;
 
   @override
   Type get type => MenuSpec;
@@ -137,6 +138,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
     StyleSpec<MenuItemSpec>? sectionLabel,
     StyleSpec<DividerSpec>? divider,
     RemixPanelTransition? panelTransition,
+    OverlayPositionConfig? positioning,
   }) {
     return MenuSpec(
       trigger: trigger ?? this.trigger,
@@ -149,6 +151,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
       sectionLabel: sectionLabel ?? this.sectionLabel,
       divider: divider ?? this.divider,
       panelTransition: panelTransition ?? this.panelTransition,
+      positioning: positioning ?? this.positioning,
     );
   }
 
@@ -173,6 +176,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
         other?.panelTransition,
         t,
       ),
+      positioning: MixOps.lerpSnap(positioning, other?.positioning, t),
     );
   }
 
@@ -188,6 +192,7 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
     sectionLabel,
     divider,
     panelTransition,
+    positioning,
   ];
 
   @override
@@ -239,7 +244,8 @@ mixin _$MenuSpec implements Spec<MenuSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('submenuItem', submenuItem))
       ..add(DiagnosticsProperty('sectionLabel', sectionLabel))
       ..add(DiagnosticsProperty('divider', divider))
-      ..add(DiagnosticsProperty('panelTransition', panelTransition));
+      ..add(DiagnosticsProperty('panelTransition', panelTransition))
+      ..add(DiagnosticsProperty('positioning', positioning));
   }
 }
 
@@ -1115,6 +1121,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
   final Prop<StyleSpec<MenuItemSpec>>? $sectionLabel;
   final Prop<StyleSpec<DividerSpec>>? $divider;
   final Prop<RemixPanelTransition>? $panelTransition;
+  final Prop<OverlayPositionConfig>? $positioning;
 
   const MenuStyler.create({
     Prop<StyleSpec<MenuTriggerSpec>>? trigger,
@@ -1127,6 +1134,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     Prop<StyleSpec<MenuItemSpec>>? sectionLabel,
     Prop<StyleSpec<DividerSpec>>? divider,
     Prop<RemixPanelTransition>? panelTransition,
+    Prop<OverlayPositionConfig>? positioning,
     super.variants,
     super.modifier,
     super.animation,
@@ -1139,7 +1147,8 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
        $submenuItem = submenuItem,
        $sectionLabel = sectionLabel,
        $divider = divider,
-       $panelTransition = panelTransition;
+       $panelTransition = panelTransition,
+       $positioning = positioning;
 
   MenuStyler({
     MenuTriggerStyler? trigger,
@@ -1152,6 +1161,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     MenuItemStyler? sectionLabel,
     DividerStyler? divider,
     RemixPanelTransition? panelTransition,
+    OverlayPositionConfig? positioning,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<MenuSpec>>? variants,
@@ -1166,6 +1176,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
          sectionLabel: Prop.maybeMix(sectionLabel),
          divider: Prop.maybeMix(divider),
          panelTransition: Prop.maybe(panelTransition),
+         positioning: Prop.maybe(positioning),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -1190,6 +1201,8 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       MenuStyler().divider(value);
   factory MenuStyler.panelTransition(RemixPanelTransition value) =>
       MenuStyler().panelTransition(value);
+  factory MenuStyler.positioning(OverlayPositionConfig value) =>
+      MenuStyler().positioning(value);
   factory MenuStyler.wrap(WidgetModifierConfig value) =>
       MenuStyler().wrap(value);
 
@@ -1205,6 +1218,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     'sectionLabel',
     'divider',
     'panelTransition',
+    'positioning',
     'animation',
     'modifier',
     'variants',
@@ -1260,6 +1274,11 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     return merge(MenuStyler(panelTransition: value));
   }
 
+  /// Sets the positioning.
+  MenuStyler positioning(OverlayPositionConfig value) {
+    return merge(MenuStyler(positioning: value));
+  }
+
   /// Sets the animation configuration.
   @override
   MenuStyler animate(AnimationConfig value) {
@@ -1298,7 +1317,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     bool useRootOverlay = false,
     bool closeOnClickOutside = true,
     FocusNode? triggerFocusNode,
-    OverlayPositionConfig positioning = const OverlayPositionConfig(),
+    OverlayPositionConfig? positioning,
     String? semanticLabel,
     bool excludeSemantics = false,
   }) {
@@ -1341,6 +1360,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       sectionLabel: MixOps.merge($sectionLabel, other?.$sectionLabel),
       divider: MixOps.merge($divider, other?.$divider),
       panelTransition: MixOps.merge($panelTransition, other?.$panelTransition),
+      positioning: MixOps.merge($positioning, other?.$positioning),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -1361,6 +1381,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       sectionLabel: MixOps.resolve(context, $sectionLabel),
       divider: MixOps.resolve(context, $divider),
       panelTransition: MixOps.resolve(context, $panelTransition),
+      positioning: MixOps.resolve(context, $positioning),
     );
 
     return StyleSpec(
@@ -1383,7 +1404,8 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
       ..add(DiagnosticsProperty('submenuItem', $submenuItem))
       ..add(DiagnosticsProperty('sectionLabel', $sectionLabel))
       ..add(DiagnosticsProperty('divider', $divider))
-      ..add(DiagnosticsProperty('panelTransition', $panelTransition));
+      ..add(DiagnosticsProperty('panelTransition', $panelTransition))
+      ..add(DiagnosticsProperty('positioning', $positioning));
   }
 
   @override
@@ -1398,6 +1420,7 @@ class MenuStyler extends MixStyler<MenuStyler, MenuSpec>
     $sectionLabel,
     $divider,
     $panelTransition,
+    $positioning,
     $animation,
     $modifier,
     $variants,
