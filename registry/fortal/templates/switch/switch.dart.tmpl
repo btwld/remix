@@ -58,9 +58,7 @@ SwitchStyler {{valuePrefix}}SwitchStyle({
     .wrap({{valuePrefix}}TouchTarget())
     // A square ring around the 40px-tall touch target, as the switch's
     // button root draws it.
-    .onFocusVisible(
-      SwitchStyler().wrap({{valuePrefix}}FocusRingModifier(radius: .zero)),
-    )
+    .onFocusVisible(SwitchStyler().wrap({{valuePrefix}}FocusRingModifier(radius: .zero)))
     .onDisabled(SwitchStyler().wrap(.opacity(0.5)))
     .merge(style);
 

@@ -58,9 +58,7 @@ SwitchStyler fortalSwitchStyle({
     .wrap(fortalTouchTarget())
     // A square ring around the 40px-tall touch target, as the switch's
     // button root draws it.
-    .onFocusVisible(
-      SwitchStyler().wrap(fortalFocusRingModifier(radius: .zero)),
-    )
+    .onFocusVisible(SwitchStyler().wrap(fortalFocusRingModifier(radius: .zero)))
     .onDisabled(SwitchStyler().wrap(.opacity(0.5)))
     .merge(style);
 
