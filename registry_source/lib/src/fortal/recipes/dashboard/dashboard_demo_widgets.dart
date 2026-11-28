@@ -635,12 +635,12 @@ class FortalActionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final contentInset = FortalTokens.space1.resolve(context);
-    final itemWidth = width - contentInset * 2;
-
     return FortalMenu<String>(
       size: .size1,
       positioning: positioning,
+      style: MenuStyler().overlay(
+        FlexBoxStyler().width(width).crossAxisAlignment(.stretch),
+      ),
       trigger: trigger,
       items: [
         for (final action in actions) ...[
@@ -649,7 +649,6 @@ class FortalActionMenu extends StatelessWidget {
             key: ValueKey('dashboard-action-${action.value}'),
             value: action.value,
             label: action.label,
-            style: MenuItemStyler().width(itemWidth),
           ),
         ],
       ],

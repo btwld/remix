@@ -44,7 +44,7 @@ void main() {
           RemixMenuItem(
             value: 'a',
             label: 'Alpha',
-            style: MenuItemStyler().width(172),
+            style: MenuItemStyler().width(200),
           ),
         ],
       ),
@@ -63,9 +63,8 @@ void main() {
           matching: find.byType(Box),
         )
         .first;
-    final inset = FortalTokens.space1.resolve(
-      tester.element(find.text('Alpha')),
-    );
-    expect(tester.getSize(panel).width, 172 + inset * 2);
+    // 5px of padding inside the 1px edge on each side; wider than the
+    // panel's 192px minimum, so the items set the width.
+    expect(tester.getSize(panel).width, 200 + 6 * 2);
   });
 }

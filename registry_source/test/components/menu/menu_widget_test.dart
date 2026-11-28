@@ -68,46 +68,59 @@ void main() {
         await tester.pump();
 
         final context = tester.element(find.text('Checked'));
+        // Solid marks the row with the muted neutral fill, soft with a faint
+        // accent tint; an open submenu keeps its row marked.
         final highlighted = switch (variant) {
-          .solid => FortalTokens.accentSolid.resolve(context),
-          .soft => FortalTokens.accentA4.resolve(context),
-        };
-        final submenuOpen = switch (variant) {
-          .solid => FortalTokens.grayA3.resolve(context),
+          .solid => FortalTokens.gray3.resolve(context),
           .soft => FortalTokens.accentA3.resolve(context),
         };
+        // One frame lands the hover, then the 150ms fill runs.
+        // One frame lands the hover, then the 150ms fill runs.
+        Future<void> settle() async {
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 200));
+        }
 
-        expect(_menuRowColor(tester, 'Checked'), isNull);
-        expect(_menuRowColor(tester, 'Compact'), isNull);
-        expect(_menuRowColor(tester, 'Comfortable'), isNull);
-        expect(_menuRowColor(tester, 'More'), isNull);
+        expect(_menuRowColor(tester, 'Checked'), Colors.transparent);
+        expect(_menuRowColor(tester, 'Compact'), Colors.transparent);
+        expect(_menuRowColor(tester, 'Comfortable'), Colors.transparent);
+        expect(_menuRowColor(tester, 'More'), Colors.transparent);
 
         submenuController.open();
         await tester.pump();
-        expect(_menuRowColor(tester, 'More'), submenuOpen);
+        await settle();
+        expect(_menuRowColor(tester, 'More'), highlighted);
 
         final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
         await mouse.addPointer(location: Offset.zero);
         addTearDown(mouse.removePointer);
 
         await mouse.moveTo(tester.getCenter(find.text('Checked')));
-        await tester.pump();
+        await settle();
         expect(_menuRowColor(tester, 'Checked'), highlighted);
 
+        await mouse.moveTo(Offset.zero);
+        await settle();
         await mouse.moveTo(tester.getCenter(find.text('Compact')));
-        await tester.pump();
+        await settle();
         expect(_menuRowColor(tester, 'Compact'), highlighted);
 
+        await mouse.moveTo(Offset.zero);
+        await settle();
         await mouse.moveTo(tester.getCenter(find.text('Comfortable')));
-        await tester.pump();
+        await settle();
         expect(_menuRowColor(tester, 'Comfortable'), highlighted);
 
+        await mouse.moveTo(Offset.zero);
+        await settle();
         await mouse.moveTo(tester.getCenter(find.text('More')));
-        await tester.pump();
+        await settle();
         expect(_menuRowColor(tester, 'More'), highlighted);
 
+        await mouse.moveTo(Offset.zero);
+        await settle();
         await mouse.moveTo(tester.getCenter(find.text('Locked')));
-        await tester.pump();
+        await settle();
         expect(_menuRowColor(tester, 'Locked'), Colors.transparent);
       },
     );
@@ -167,19 +180,12 @@ void main() {
                 .spec;
 
             final context = tester.element(find.text('Checked'));
+            // Indicators stay ink on the neutral highlight; a disabled row
+            // fades as a whole instead of recoloring.
             final idleColor = FortalTokens.gray12.resolve(context);
-            final disabledColor = FortalTokens.grayA8.resolve(context);
-            final highlightedColor = switch (variant) {
-              .solid =>
-                highContrast
-                    ? FortalTokens.accent1.resolve(context)
-                    : FortalTokens.accentContrast.resolve(context),
-              .soft => idleColor,
-            };
-            final expectedSize = switch (size) {
-              .size1 => FortalTokens.space2.resolve(context),
-              .size2 => FortalTokens.selectIndicatorSize2.resolve(context),
-            };
+            final disabledColor = idleColor;
+            final highlightedColor = idleColor;
+            const expectedSize = 16.0;
 
             expect(indicatorSpec('Checked').color, idleColor);
             expect(indicatorSpec('Checked').size, expectedSize);
@@ -233,18 +239,11 @@ void main() {
       await tester.pump();
 
       final context = tester.element(find.text('Rename'));
-      final contentIconSize = switch (size) {
-        .size1 => FortalTokens.space3.resolve(context),
-        .size2 => FortalTokens.space4.resolve(context),
-      };
-      final subtriggerIconSize = switch (size) {
-        .size1 => FortalTokens.space2.resolve(context),
-        .size2 => FortalTokens.selectIndicatorSize2.resolve(context),
-      };
-      final triggerGap = switch (size) {
-        .size1 => FortalTokens.space1.resolve(context),
-        .size2 => FortalTokens.space2.resolve(context),
-      };
+      // Icons are 16px and the trigger gap 8px at both sizes; only the row
+      // height steps.
+      const contentIconSize = 16.0;
+      const subtriggerIconSize = 16.0;
+      final triggerGap = FortalTokens.space2.resolve(context);
 
       final resolved = fortalMenuStyle(size: size).resolve(context).spec;
       expect(
@@ -255,7 +254,7 @@ void main() {
 
       expect(
         tester.getSize(find.byIcon(Icons.edit_outlined)),
-        Size.square(contentIconSize),
+        const Size.square(contentIconSize),
       );
       expect(
         tester
@@ -270,7 +269,7 @@ void main() {
 
       expect(
         tester.getSize(find.byIcon(Icons.tune)),
-        Size.square(contentIconSize),
+        const Size.square(contentIconSize),
       );
       expect(
         _rowAround(tester, 'Options').styleSpec.spec.flex?.spec.spacing,
@@ -327,19 +326,50 @@ void main() {
         (overlay.styleSpec?.spec.decoration as BoxDecoration?)?.color,
         FortalTokens.colorPanelSolid.resolve(context),
       );
-      expect(_menuRowColor(tester, 'View profile'), isNull);
+      expect(_menuRowColor(tester, 'View profile'), Colors.transparent);
 
       final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
       await mouse.addPointer(location: Offset.zero);
       addTearDown(mouse.removePointer);
       await mouse.moveTo(tester.getCenter(find.text('View profile')));
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
       expect(
         _menuRowColor(tester, 'View profile'),
-        FortalTokens.accentSolid.resolve(context),
+        FortalTokens.gray3.resolve(context),
       );
     },
   );
+
+  testWidgets('rows stay menu items while the panel fades in', (tester) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpRemixApp(
+      FortalMenu<String>(
+        trigger: const RemixMenuTrigger(label: 'Open'),
+        onSelected: (_) {},
+        items: const [
+          RemixMenuItem(value: 'a', label: 'Alpha'),
+          RemixMenuItem(value: 'b', label: 'Bravo'),
+        ],
+      ),
+    );
+
+    await tester.tap(find.text('Open'));
+    await tester.pump();
+
+    for (final label in ['Alpha', 'Bravo']) {
+      final fades = tester.widgetList<Opacity>(
+        find.ancestor(of: find.text(label), matching: find.byType(Opacity)),
+      );
+      expect(fades.map((fade) => fade.opacity), contains(0), reason: label);
+      expect(
+        tester.getSemantics(find.text(label)).getSemanticsData().role,
+        SemanticsRole.menuItem,
+        reason: label,
+      );
+    }
+    semantics.dispose();
+  });
 
   testWidgets(
     'FortalMenu.soft accepts RemixMenuTrigger.builder and opens items',

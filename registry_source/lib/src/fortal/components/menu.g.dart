@@ -9,8 +9,13 @@ part of 'menu.dart';
 /// The Fortal Menu recipe: the trigger, the floating panel, its items,
 /// submenu items and dividers.
 ///
-/// [highContrast] moves the highlighted item of the solid variant to accent
-/// step 12.
+/// The trigger is a 32px framed control with a chevron that turns over while
+/// the menu is open. The panel opens below the trigger's end edge, rising and
+/// growing in from it while its rows fade in one after another, and leaves
+/// faster than it came.
+///
+/// [highContrast] marks the highlighted item with a focus ring as well and
+/// draws the trigger frame in the strong border.
 class FortalMenu<T> extends StatelessWidget {
   const FortalMenu({
     super.key,
@@ -36,7 +41,7 @@ class FortalMenu<T> extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// The accent's solid fill under its contrast text.
+  /// The muted neutral fill.
   const FortalMenu.solid({
     super.key,
     this.size = .size2,
@@ -60,7 +65,7 @@ class FortalMenu<T> extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = FortalMenuVariant.solid;
 
-  /// A tinted accent fill.
+  /// A faint accent tint.
   const FortalMenu.soft({
     super.key,
     this.size = .size2,
