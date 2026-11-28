@@ -434,8 +434,10 @@ abstract final class UiTokens {
   static const progressRadius3 = RadiusToken('ui.progress.radius.3');
 
   static const sliderTrackSize1 = DoubleToken('ui.slider.track-size.1');
+  static const sliderTrackSize2 = DoubleToken('ui.slider.track-size.2');
   static const sliderTrackSize3 = DoubleToken('ui.slider.track-size.3');
   static const sliderThumbSize1 = DoubleToken('ui.slider.thumb-size.1');
+  static const sliderThumbSize2 = DoubleToken('ui.slider.thumb-size.2');
   static const sliderThumbSize3 = DoubleToken('ui.slider.thumb-size.3');
   static const sliderTrackRadius1 = RadiusToken('ui.slider.track-radius.1');
   static const sliderTrackRadius2 = RadiusToken('ui.slider.track-radius.2');

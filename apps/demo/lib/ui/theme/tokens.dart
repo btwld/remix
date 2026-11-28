@@ -442,8 +442,10 @@ abstract final class FortalTokens {
   static const progressRadius3 = RadiusToken('fortal.progress.radius.3');
 
   static const sliderTrackSize1 = DoubleToken('fortal.slider.track-size.1');
+  static const sliderTrackSize2 = DoubleToken('fortal.slider.track-size.2');
   static const sliderTrackSize3 = DoubleToken('fortal.slider.track-size.3');
   static const sliderThumbSize1 = DoubleToken('fortal.slider.thumb-size.1');
+  static const sliderThumbSize2 = DoubleToken('fortal.slider.thumb-size.2');
   static const sliderThumbSize3 = DoubleToken('fortal.slider.thumb-size.3');
   static const sliderTrackRadius1 = RadiusToken('fortal.slider.track-radius.1');
   static const sliderTrackRadius2 = RadiusToken('fortal.slider.track-radius.2');

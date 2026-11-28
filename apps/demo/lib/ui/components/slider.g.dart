@@ -8,8 +8,11 @@ part of 'slider.dart';
 
 /// The Fortal Slider recipe.
 ///
-/// It reads top to bottom: the track and thumb sizes, then the variant's
-/// colors, then the dark-mode thumb edge, hover, press and disabled.
+/// It reads top to bottom: the track, thumb and row sizes, then the
+/// variant's colours, then the thumb lift, motion and disabled. Thumbs are
+/// the light control thumb under the three-layer thumb shadow; a held thumb
+/// lifts to 116%, and keys, track presses and new values glide the thumb on
+/// the snappy spring while a dragged thumb follows the pointer.
 ///
 /// [highContrast] darkens the range with an overlay.
 class FortalSlider extends StatelessWidget {
@@ -35,7 +38,7 @@ class FortalSlider extends StatelessWidget {
     this.excludeSemantics = false,
   });
 
-  /// A gray track and a solid accent range.
+  /// The control track and a control-ink range.
   const FortalSlider.surface({
     super.key,
     this.size = .size2,
@@ -57,7 +60,8 @@ class FortalSlider extends StatelessWidget {
     this.excludeSemantics = false,
   }) : variant = FortalSliderVariant.surface;
 
-  /// A gray track and a softer accent range.
+  /// The control track and a range mixed 55% from the control ink toward the
+  /// track.
   const FortalSlider.soft({
     super.key,
     this.size = .size2,
