@@ -54,7 +54,7 @@ RadioStyler uiRadioStyle({
       .surface || .card => _surface(highContrast),
       .soft => _soft(highContrast),
     })
-    .merge(_copy(size))
+    .merge(_copy(size, highContrast))
     .merge(variant == .card ? _card(highContrast) : _target())
     .onPressed(RadioStyler().scale(0.88))
     .animate(_motion)
@@ -134,7 +134,7 @@ RadioStyler _soft(bool highContrast) {
 
 /// Secondary medium label 12px from the circle that turns foreground when
 /// selected, and a muted description 2px under it.
-RadioStyler _copy(UiRadioSize size) {
+RadioStyler _copy(UiRadioSize size, bool highContrast) {
   final (label, description) = switch (size) {
     .size1 => (UiTokens.text1, UiTokens.text1),
     .size2 => (UiTokens.text2, UiTokens.text1),
@@ -150,7 +150,9 @@ RadioStyler _copy(UiRadioSize size) {
       )
       .labelSpacing(UiTokens.space3())
       .description(
-        TextStyler().style(description.mix()).color(UiTokens.gray10()),
+        TextStyler()
+            .style(description.mix())
+            .color(highContrast ? UiTokens.gray11() : _mutedContent()),
       )
       .descriptionSpacing(2)
       .onSelected(RadioStyler().label(TextStyler().color(UiTokens.gray12())));
@@ -190,6 +192,13 @@ RadioStyler _card(bool highContrast) {
 /// equal styles.
 /// 12px inside the card's 1px frame, which is drawn inset and takes no
 /// layout space.
+/// Gray 10 reads at about 4.1:1 on a light page; high contrast takes gray 11.
+final _mutedContent = ContextToken<Color>(
+  (context) => UiTheme.maybeOf(context)?.highContrast ?? false
+      ? UiTokens.gray11.resolve(context)
+      : UiTokens.gray10.resolve(context),
+);
+
 final _cardInset = ContextToken<double>(
   (c) => UiTokens.space3.resolve(c) + UiTokens.borderWidth1.resolve(c),
 );

@@ -84,7 +84,7 @@ CheckboxStyler fortalCheckboxGroupItemStyle({
   variant: variant,
   size: size,
   highContrast: highContrast,
-).merge(_copy(size)).merge(style);
+).merge(_copy(size, highContrast)).merge(style);
 
 /// Frame colour and press scale: 150 ms on the standard ease.
 final _motion = AnimationConfig.curve(
@@ -130,7 +130,7 @@ CheckboxStyler _square(FortalCheckboxSize size) {
 
 /// Medium foreground label 12px from the square, and a muted description
 /// 2px under it.
-CheckboxStyler _copy(FortalCheckboxSize size) {
+CheckboxStyler _copy(FortalCheckboxSize size, bool highContrast) {
   final (label, description) = switch (size) {
     .size1 => (FortalTokens.text1, FortalTokens.text1),
     .size2 => (FortalTokens.text2, FortalTokens.text1),
@@ -146,10 +146,19 @@ CheckboxStyler _copy(FortalCheckboxSize size) {
       )
       .labelSpacing(FortalTokens.space3())
       .description(
-        TextStyler().style(description.mix()).color(FortalTokens.gray10()),
+        TextStyler()
+            .style(description.mix())
+            .color(highContrast ? FortalTokens.gray11() : _mutedContent()),
       )
       .descriptionSpacing(2);
 }
+
+/// Gray 10 reads at about 4.1:1 on a light page; high contrast takes gray 11.
+final _mutedContent = ContextToken<Color>(
+  (context) => FortalTheme.maybeOf(context)?.highContrast ?? false
+      ? FortalTokens.gray11.resolve(context)
+      : FortalTokens.gray10.resolve(context),
+);
 
 /// A surface square in a strong frame that darkens on hover; selected, the
 /// frame and fill take the control ink under a glyph-coloured mark.
