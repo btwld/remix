@@ -336,17 +336,21 @@ Caller style overrides are always merged last.
 
 Combobox promotes `apps/demo/lib/components/combobox.dart` into the registry.
 Its surface/soft and size1/size2/size3 axes match TextField; it calls the same
-field recipe, including disabled colors and the focus outline without layout
-shift. The floating panel uses colorPanel, gray7 border, radius3, shadow3,
-space1 padding, space2 gap and a gray9 overflow thumb. Remix owns fades and
-scrolling. Rows grow from 24/32/32px minima, with space3 horizontal and 6px
-vertical padding, radius2, text1/2/3 and gray12 labels. A transparent 1px
-accent8 border reserves keyboard highlight geometry. Hover uses accentA3,
-keyboard highlight accentA5 with the accent8 border, and press accentA7.
-Acceptance appears as the field value; there is no persistent selected state,
-and rows that `isOptionDisabled` marks have no disabled style yet. No preset
-behavior is added. Test coverage includes
-both modes, every accent, field matrices, contrast and RTL at 200% text.
+field recipe for geometry, text and disabled look, with its own frame: gray-7
+at rest on surface, the accent frame while focused with the panel closed, and
+gray-8 over the gray-3 fill while hovered or open (the pointer wins over
+focus; error keeps error step 8). The floating panel is `colorPanelSolid` in a
+gray-7 frame with the floating shadow (`shadow5`), a 20px (`radius6`) corner,
+5px padding, an 8px gap, a 300px height bound and no drawn scroll thumb. It
+rises 6px and grows from 0.97 at its top edge on the snappy spring while it
+fades in over 150ms, and leaves 4px up to 0.98 over 100ms; under reduced
+motion it only fades. Rows grow from a 36px minimum with 12px horizontal and
+6px vertical padding, a 15px corner, 13px gray-12 labels and one gray-3 fill
+for hover, keyboard highlight and press over 80ms. Acceptance appears as the
+field value; there is no persistent selected state, and rows that
+`isOptionDisabled` marks have no disabled style yet. No preset behavior is
+added. Test coverage includes both modes, every accent, field states,
+contrast, panel motion and RTL at 200% text.
 
 ## Avatar group
 

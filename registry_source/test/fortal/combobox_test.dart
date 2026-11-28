@@ -64,55 +64,60 @@ void main() {
   for (final dark in [false, true]) {
     final FortalThemeMode mode = dark ? .dark : .light;
     testWidgets(
-      '$mode field matrix matches TextField including disabled and focus',
+      '$mode field keeps the text field geometry with its own frame',
       (tester) async {
+        Color frame(TextFieldSpec spec) =>
+            spec.containerEffects!.overContent!.shadows.single.color;
         for (final size in FortalTextFieldSize.values) {
-          for (final variant in FortalTextFieldVariant.values) {
-            for (final states in <Set<WidgetState>>[
-              {},
-              {.hovered},
-              {.focused},
-              {.disabled},
-              {.focused, .disabled},
-            ]) {
-              await resolveInFortalTheme(
-                tester,
-                (context) {
-                  final combo = fortalComboboxStyle(
-                    size: size,
-                    variant: variant,
-                  ).build(context).spec;
-                  final field = fortalTextFieldStyle(
-                    size: FortalTextFieldSize.values[size.index],
-                    variant: FortalTextFieldVariant.values[variant.index],
-                  ).build(context);
-                  expect(combo.field, field);
-                },
-                mode: mode,
-                states: states,
-              );
-            }
+          for (final (states, expected, fill)
+              in <(Set<WidgetState>, ColorToken, ColorToken)>[
+                ({}, FortalTokens.gray7, FortalTokens.gray2),
+                ({.focused}, FortalTokens.accent9, FortalTokens.gray2),
+                ({.focused, .selected}, FortalTokens.gray8, FortalTokens.gray3),
+                ({.focused, .hovered}, FortalTokens.gray8, FortalTokens.gray3),
+                ({.disabled, .hovered}, FortalTokens.gray7, FortalTokens.gray3),
+                (
+                  {.error, .focused, .hovered},
+                  FortalTokens.error8,
+                  FortalTokens.gray3,
+                ),
+              ]) {
+            await resolveInFortalTheme(
+              tester,
+              (context) {
+                final combo = fortalComboboxStyle(size: size).build(context);
+                final field = fortalTextFieldStyle(size: size).build(context);
+                final spec = combo.spec.field.spec;
+                expect(
+                  spec.container.spec.constraints,
+                  field.spec.container.spec.constraints,
+                );
+                expect(
+                  spec.container.spec.padding,
+                  field.spec.container.spec.padding,
+                );
+                expect(
+                  frame(spec),
+                  expected.resolve(context),
+                  reason: '$states',
+                );
+                expect(
+                  decoration(spec.container.spec).color,
+                  fill.resolve(context),
+                  reason: '$states',
+                );
+              },
+              mode: mode,
+              states: states,
+            );
           }
         }
       },
     );
     testWidgets(
-      '$mode suggestion states preserve geometry and readable contrast for every palette',
+      '$mode suggestion states share one muted fill with readable labels for every palette',
       (tester) async {
         for (final accent in FortalAccentColor.values) {
-          // The pressed row's accent alpha-7 fill is a stronger tint now: in
-          // dark the gray-12 label reads 4.36:1 on green, 3.46:1 on amber and
-          // 4.41:1 on orange. The combobox re-skin moves rows to neutral
-          // fills; until then those three skip the pressed contrast check.
-          final pressedBelowFloor =
-              mode == FortalThemeMode.dark &&
-              const {
-                FortalAccentColor.mar,
-                FortalAccentColor.sol,
-                FortalAccentColor.caju,
-              }.contains(accent);
-          final fills = <Color>{};
-          final borders = <EdgeInsetsGeometry?>{};
           for (final state in [
             WidgetState.hovered,
             WidgetState.focused,
@@ -124,30 +129,27 @@ void main() {
                 final spec = fortalComboboxStyle().build(context).spec;
                 final row = decoration(spec.option.spec.container.spec);
                 final panel = decoration(spec.panel.spec.container.spec);
+                expect(row.color, FortalTokens.gray3.resolve(context));
+                expect(row.border, isNull);
+                expect(row.borderRadius, BorderRadius.circular(15));
                 expect(
-                  spec.option.spec.container.spec.padding,
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  compositedContrast(
+                    foreground: spec.option.spec.label.spec.style!.color!,
+                    fill: row.color!,
+                    panel: panel.color!,
+                  ),
+                  greaterThanOrEqualTo(4.5),
+                  reason: '${accent.name} ${state.name}',
                 );
-                fills.add(row.color!);
-                borders.add(row.border?.dimensions);
-                if (!(pressedBelowFloor && state == WidgetState.pressed)) {
-                  expect(
-                    compositedContrast(
-                      foreground: spec.option.spec.label.spec.style!.color!,
-                      fill: row.color!,
-                      panel: panel.color!,
-                    ),
-                    greaterThanOrEqualTo(4.5),
-                    reason: '${accent.name} ${state.name}',
-                  );
-                }
                 expect(
                   spec.option.spec.container.spec.constraints!.minHeight,
-                  32,
+                  36,
                 );
+                expect(spec.panel.spec.scrollbarThickness, 0);
+                expect(panel.borderRadius, BorderRadius.circular(20));
                 expect(
-                  spec.panel.spec.scrollbarColor,
-                  FortalTokens.gray9.resolve(context),
+                  panel.color,
+                  FortalTokens.colorPanelSolid.resolve(context),
                 );
               },
               accent: accent,
@@ -155,36 +157,43 @@ void main() {
               states: {state},
             );
           }
-          expect(fills, hasLength(3));
-          expect(
-            borders,
-            hasLength(1),
-            reason: 'highlight must not move wrapped labels',
-          );
         }
       },
     );
-    testWidgets('$mode keyboard suggestion ring is opaque accent8', (
-      tester,
-    ) async {
-      for (final accent in FortalAccentColor.values) {
-        final (border, accent8) = await resolveInFortalTheme(
-          tester,
-          (context) {
-            final spec = fortalComboboxStyle().build(context).spec;
-            return (
-              decoration(spec.option.spec.container.spec).border! as Border,
-              FortalTokens.accent8.resolve(context),
-            );
-          },
-          accent: accent,
-          mode: mode,
-          states: {WidgetState.focused},
-        );
-        expect(border.top.width, 1);
-        expect(border.top.color, accent8);
-        expect(border.top.color.a, 1);
-      }
+    testWidgets('$mode panel grows in and leaves in 100ms', (tester) async {
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 320,
+          child: FortalCombobox<String>(
+            label: 'Team',
+            optionsBuilder: (_) => const ['Design', 'Marketing'],
+          ),
+        ),
+        mode: mode,
+      );
+      double opacity() => tester
+          .widgetList<Opacity>(
+            find.ancestor(
+              of: find.text('Marketing'),
+              matching: find.byType(Opacity),
+            ),
+          )
+          .fold(1.0, (product, widget) => product * widget.opacity);
+
+      await tester.tap(find.byType(EditableText));
+      await tester.enterText(find.byType(EditableText), 'g');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 40));
+      expect(opacity(), inExclusiveRange(0, 1));
+      await tester.pumpAndSettle();
+      expect(opacity(), 1);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 60));
+      expect(find.text('Marketing'), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 60));
+      expect(find.text('Marketing'), findsNothing);
     });
     testWidgets('$mode caller suggestion border stays opaque', (tester) async {
       for (final focused in [false, true]) {
@@ -264,6 +273,53 @@ void main() {
         await tester.pumpAndSettle();
         expect(accepted, 'San Sebastián, Basque Country · Spain');
         expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
+  for (final dark in [false, true]) {
+    testWidgets(
+      '${dark ? 'dark' : 'light'} placeholder lifts to gray 11 under high contrast',
+      (tester) async {
+        for (final variant in FortalTextFieldVariant.values) {
+          for (final highContrast in [false, true]) {
+            late TextFieldSpec field;
+            late FortalThemeColors colors;
+            await tester.pumpRemixApp(
+              Builder(
+                builder: (context) {
+                  colors = resolveFortalTokens(FortalTheme.of(context));
+                  field = fortalComboboxStyle(
+                    variant: variant,
+                  ).build(context).spec.field.spec;
+                  return const SizedBox.shrink();
+                },
+              ),
+              mode: dark ? .dark : .light,
+              highContrast: highContrast,
+            );
+            final reason = '$dark/$variant/highContrast=$highContrast';
+            final hint = field.hintText.spec.style!.color!;
+            expect(
+              hint,
+              colors.gray.scale.step(highContrast ? 11 : 10),
+              reason: reason,
+            );
+            if (!highContrast) continue;
+            final fill =
+                (field.container.spec.decoration as BoxDecoration).color!;
+            for (final panel in [
+              colors.colorBackground,
+              colors.colorPanelSolid,
+            ]) {
+              expect(
+                compositedContrast(foreground: hint, fill: fill, panel: panel),
+                greaterThanOrEqualTo(4.5),
+                reason: reason,
+              );
+            }
+          }
+        }
       },
     );
   }
