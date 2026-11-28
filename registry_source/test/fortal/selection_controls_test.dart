@@ -7,6 +7,15 @@ import 'package:remix/remix.dart';
 import '../helpers/contrast.dart';
 import '../helpers/test_helpers.dart';
 
+Widget _checkbox({bool highContrast = false, bool autofocus = false}) =>
+    FortalCheckbox(
+      selected: false,
+      onChanged: (_) {},
+      highContrast: highContrast,
+      autofocus: autofocus,
+      label: 'Email',
+    );
+
 Widget _checkboxItem({bool highContrast = false, bool autofocus = false}) =>
     RemixCheckboxGroup<String>(
       values: const {},
@@ -31,6 +40,15 @@ Widget _radio({bool highContrast = false, bool autofocus = false}) =>
         label: 'Email',
         description: 'Details',
       ),
+    );
+
+Widget _switch({bool highContrast = false, bool autofocus = false}) =>
+    FortalSwitch(
+      selected: false,
+      onChanged: (_) {},
+      highContrast: highContrast,
+      autofocus: autofocus,
+      label: 'Email',
     );
 
 typedef _Build = Widget Function({bool highContrast, bool autofocus});
@@ -86,6 +104,50 @@ void main() {
             }
           },
         );
+      }
+    }
+  });
+
+  group('focus ring', () {
+    late FocusHighlightStrategy previous;
+    setUp(() {
+      previous = FocusManager.instance.highlightStrategy;
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+    });
+    tearDown(() => FocusManager.instance.highlightStrategy = previous);
+
+    for (final (name, build, root) in <(String, _Build, Finder)>[
+      ('checkbox', _checkbox, find.byType(FortalCheckbox)),
+      ('radio', _radio, find.byType(FortalRadio<String>)),
+      ('switch', _switch, find.byType(FortalSwitch)),
+    ]) {
+      for (final dark in [false, true]) {
+        testWidgets('$name ${dark ? 'dark' : 'light'} draws the focus ring '
+            'only while keyboard focused', (tester) async {
+          PaintPattern ring(Color color) => paints
+            ..something(
+              (method, args) =>
+                  method == #drawDRRect &&
+                  (args[2] as Paint).color.toARGB32() == color.toARGB32(),
+            );
+
+          await tester.pumpRemixApp(build(), mode: dark ? .dark : .light);
+          await tester.pumpAndSettle();
+          final focus = fortalFocusOutline()
+              .resolve(tester.element(root))
+              .outline
+              .color;
+          expect(tester.renderObject(root), isNot(ring(focus)));
+
+          await tester.pumpWidget(const SizedBox());
+          await tester.pumpRemixApp(
+            build(autofocus: true),
+            mode: dark ? .dark : .light,
+          );
+          await tester.pumpAndSettle();
+          expect(tester.renderObject(root), ring(focus));
+        });
       }
     }
   });
