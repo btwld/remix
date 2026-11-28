@@ -202,7 +202,9 @@ MenuTriggerStyler _trigger({required bool highContrast}) {
       )
       .onPressed(muted.color(FortalTokens.gray4()))
       // Open: the trigger reports `selected` while its menu is up.
-      .onSelected(muted.trailingIcon(IconStyler().wrap(.rotate(radians: math.pi))))
+      .onSelected(
+        muted.trailingIcon(IconStyler().wrap(.rotate(radians: math.pi))),
+      )
       .onFocusVisible(.containerEffects(fortalFocusOutline()))
       .onDisabled(
         MenuTriggerStyler()
@@ -272,17 +274,11 @@ MenuItemStyler _submenuItem(
       .onSelected(highlighted);
 }
 
-/// A 1px subtle line running to a pixel from the panel's edges.
+/// A 1px subtle line across the panel's content box, 4px above and below.
 DividerStyler _divider() => DividerStyler()
     .height(FortalTokens.borderWidth1())
-    .margin(
-      .symmetric(vertical: FortalTokens.space1(), horizontal: _dividerOut()),
-    )
+    .margin(.vertical(FortalTokens.space1()))
     .color(FortalTokens.gray6());
-
-final _dividerOut = ContextToken<double>(
-  (context) => -FortalTokens.space1.resolve(context),
-);
 
 class _Metrics {
   const _Metrics({required this.itemHeight});

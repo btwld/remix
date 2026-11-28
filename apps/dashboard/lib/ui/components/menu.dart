@@ -271,15 +271,11 @@ MenuItemStyler _submenuItem(
       .onSelected(highlighted);
 }
 
-/// A 1px subtle line running to a pixel from the panel's edges.
+/// A 1px subtle line across the panel's content box, 4px above and below.
 DividerStyler _divider() => DividerStyler()
     .height(UiTokens.borderWidth1())
-    .margin(.symmetric(vertical: UiTokens.space1(), horizontal: _dividerOut()))
+    .margin(.vertical(UiTokens.space1()))
     .color(UiTokens.gray6());
-
-final _dividerOut = ContextToken<double>(
-  (context) => -UiTokens.space1.resolve(context),
-);
 
 class _Metrics {
   const _Metrics({required this.itemHeight});

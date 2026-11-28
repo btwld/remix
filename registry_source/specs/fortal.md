@@ -286,8 +286,8 @@ and drop 2px into place, 35ms apart for the first four. It leaves in 100ms,
 sinking half as far. Rows are 36px (32px at size 1) with an 11px inset, a 14px
 corner, 13px gray-12 labels and 16px gray-11 icons; `solid` marks the row
 under the pointer or keyboard with gray 3, `soft` with the accent's third
-alpha step, and a disabled row shows at 45%. Dividers are 1px gray 6 running
-to a pixel from the panel's edges.
+alpha step, and a disabled row shows at 45%. Dividers are 1px gray 6 across
+the panel's content box, 4px above and below.
 
 Surface text fields and text areas use an opaque gray-2 fill and the
 `controlBorder` frame, so a field without a visible label can still be found;

@@ -202,7 +202,9 @@ MenuTriggerStyler _trigger({required bool highContrast}) {
       )
       .onPressed(muted.color({{typePrefix}}Tokens.gray4()))
       // Open: the trigger reports `selected` while its menu is up.
-      .onSelected(muted.trailingIcon(IconStyler().wrap(.rotate(radians: math.pi))))
+      .onSelected(
+        muted.trailingIcon(IconStyler().wrap(.rotate(radians: math.pi))),
+      )
       .onFocusVisible(.containerEffects({{valuePrefix}}FocusOutline()))
       .onDisabled(
         MenuTriggerStyler()
@@ -272,17 +274,11 @@ MenuItemStyler _submenuItem(
       .onSelected(highlighted);
 }
 
-/// A 1px subtle line running to a pixel from the panel's edges.
+/// A 1px subtle line across the panel's content box, 4px above and below.
 DividerStyler _divider() => DividerStyler()
     .height({{typePrefix}}Tokens.borderWidth1())
-    .margin(
-      .symmetric(vertical: {{typePrefix}}Tokens.space1(), horizontal: _dividerOut()),
-    )
+    .margin(.vertical({{typePrefix}}Tokens.space1()))
     .color({{typePrefix}}Tokens.gray6());
-
-final _dividerOut = ContextToken<double>(
-  (context) => -{{typePrefix}}Tokens.space1.resolve(context),
-);
 
 class _Metrics {
   const _Metrics({required this.itemHeight});
