@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:registry_source/fortal.dart';
 
+import '../../helpers/contrast.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
@@ -141,6 +142,53 @@ void main() {
     }
   });
 
+  testWidgets('high contrast lifts resting labels to 4.5:1 on the track', (
+    tester,
+  ) async {
+    for (final mode in [FortalThemeMode.light, FortalThemeMode.dark]) {
+      final result = await _resolve(tester, mode: mode, highContrast: true);
+      final track =
+          (result.spec.container.spec.decoration! as BoxDecoration).color!;
+      final item = result.spec.item.spec;
+
+      expect(
+        contrastRatio(item.label.spec.style!.color!, track),
+        greaterThanOrEqualTo(4.5),
+        reason: '${mode.name} label',
+      );
+      expect(
+        contrastRatio(item.icon.spec.color!, track),
+        greaterThanOrEqualTo(4.5),
+        reason: '${mode.name} icon',
+      );
+    }
+  });
+
+  testWidgets('a disabled control shows at 52%', (tester) async {
+    for (final enabled in [true, false]) {
+      await tester.pumpRemixApp(
+        FortalSegmentedControl<String>(
+          items: const [
+            RemixSegmentedControlItem(value: 'a', label: 'Alpha'),
+            RemixSegmentedControlItem(value: 'b', label: 'Bravo'),
+          ],
+          selectedValue: 'a',
+          enabled: enabled,
+          onChanged: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      for (final label in ['Alpha', 'Bravo']) {
+        expect(
+          _shownOpacity(tester, find.text(label)),
+          closeTo(enabled ? 1 : 0.52, 1e-9),
+          reason: '$label enabled: $enabled',
+        );
+      }
+    }
+  });
+
   testWidgets('labels stay on one line so a narrow track cannot clip them', (
     tester,
   ) async {
@@ -173,6 +221,7 @@ Future<({SegmentedControlSpec spec})> _resolve(
   FortalSegmentedControlSize size = FortalSegmentedControlSize.size2,
   FortalAccentColor? accent,
   FortalThemeMode? mode,
+  bool? highContrast,
   Set<WidgetState> states = const {},
 }) async {
   late ({SegmentedControlSpec spec}) result;
@@ -180,6 +229,7 @@ Future<({SegmentedControlSpec spec})> _resolve(
     FortalTheme(
       accent: accent,
       mode: mode,
+      highContrast: highContrast,
       child: WidgetStateStyleOverride(
         states: states,
         child: Builder(
@@ -202,3 +252,9 @@ double _radius(BoxSpec box) =>
         .x;
 
 Color? _color(BoxSpec box) => (box.decoration as BoxDecoration?)?.color;
+
+double _shownOpacity(WidgetTester tester, Finder finder) => tester
+    .widgetList<Opacity>(
+      find.ancestor(of: finder, matching: find.byType(Opacity)),
+    )
+    .fold(1.0, (shown, layer) => shown * layer.opacity);
