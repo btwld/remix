@@ -15,6 +15,7 @@ import '../../utilities/remix_placement.dart';
 import '../spinner/spinner.dart';
 
 part 'button_spec.dart';
+part 'button_style.dart';
 part 'button_widget.dart';
 part 'button_content.dart';
 part 'button.g.dart';

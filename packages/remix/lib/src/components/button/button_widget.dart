@@ -308,7 +308,10 @@ class RemixButton extends StatelessWidget {
     );
 
     return remixLoadingAnnouncer(
-      control: RemixLoadingTransitionHost(loading: loading, child: button),
+      control: RemixLoadingTransitionHost(
+        loading: loading,
+        child: _RemixButtonLoadingScope(loading: loading, child: button),
+      ),
       announcement: loading && !excludeSemantics
           ? '${semanticLabel ?? label}, loading'
           : null,
