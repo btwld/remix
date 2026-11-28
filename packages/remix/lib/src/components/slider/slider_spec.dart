@@ -66,6 +66,20 @@ class SliderSpec with _$SliderSpec {
   @override
   final BlendMode? blendMode;
 
+  /// How a thumb moves to a value that does not come from dragging it: a key
+  /// press, a press on the track, or a value the app sets. Accepts
+  /// [CurveAnimationConfig] (such as `AnimationConfig.curve(...)`) or
+  /// [SpringAnimationConfig] (such as `AnimationConfig.springDescription(...)`),
+  /// which may overshoot. The selected range follows the moving thumbs.
+  ///
+  /// `null`, the default, jumps to every new value. While a thumb is dragged
+  /// it follows the pointer, and under reduced motion every change jumps.
+  /// The slider throws [ArgumentError] for phase and keyframe configs when it
+  /// builds. `onEnd` runs only when a move completes, not when it is
+  /// interrupted.
+  @override
+  final AnimationConfig? thumbMotion;
+
   const SliderSpec({
     StyleSpec<BoxSpec>? track,
     Color? trackColor,
@@ -79,6 +93,7 @@ class SliderSpec with _$SliderSpec {
     this.thumbEffects,
     this.thumbFocusEffects,
     this.blendMode,
+    this.thumbMotion,
   }) : trackColor = trackColor ?? _remixSliderDefaultTrackColor,
        trackWidth = trackWidth ?? _remixSliderDefaultTrackThickness,
        rangeColor = rangeColor ?? _remixSliderDefaultRangeColor,

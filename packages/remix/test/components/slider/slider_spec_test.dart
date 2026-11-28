@@ -194,7 +194,7 @@ void main() {
       test('props list contains all properties', () {
         final spec = SliderSpec();
 
-        expect(spec.props, hasLength(12));
+        expect(spec.props, hasLength(13));
         expect(spec.props, contains(spec.thumb));
         expect(spec.props, contains(spec.trackColor));
         expect(spec.props, contains(spec.trackWidth));
@@ -223,6 +223,7 @@ void main() {
             'thumbEffects',
             'thumbFocusEffects',
             'blendMode',
+            'thumbMotion',
           ]),
         );
       });

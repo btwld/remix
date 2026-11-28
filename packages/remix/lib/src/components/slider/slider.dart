@@ -3,6 +3,7 @@ library remix_slider;
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
@@ -11,10 +12,12 @@ import 'package:naked_ui/naked_ui.dart';
 import '../../utilities/remix_style.dart';
 import '../../rendering/remix_blend_mode.dart';
 import '../../rendering/remix_box_effects.dart';
+import '../../utilities/remix_reduced_motion.dart';
 
 part 'slider_spec.dart';
 part 'slider_style.dart';
 part 'slider_widget.dart';
 part 'range_slider_widget.dart';
 part 'slider_renderer.dart';
+part 'slider_thumb_motion.dart';
 part 'slider.g.dart';
