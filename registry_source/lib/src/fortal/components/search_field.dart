@@ -1,10 +1,9 @@
-import 'dart:math' as math;
-
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_ui_icons/remix_ui_icons.dart';
 
+import '../motion/motion.dart';
 import '../theme/theme.dart';
 import 'icon_button.dart';
 import 'text_field.dart';
@@ -12,22 +11,22 @@ import 'text_field.dart';
 /// The sizes a search field comes in: the text field's. Pixel values are at
 /// 100% theme scaling.
 enum FortalSearchFieldSize {
-  /// 24px tall, with 12px text and a 12px clear glyph.
+  /// 32px tall.
   size1,
 
-  /// 32px tall, with 14px text and a 12px clear glyph. The default.
+  /// 40px tall. The default.
   size2,
 
-  /// 40px tall, with 16px text and a 16px clear glyph.
+  /// 44px tall.
   size3,
 }
 
 /// The looks a search field comes in: the text field's.
 enum FortalSearchFieldVariant {
-  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
+  /// The surface fill inside a 1px strong frame.
   surface,
 
-  /// An accent tint inside a 1px accent ring, with accent-colored text.
+  /// The muted surface fill with no frame until hovered or focused.
   soft,
 }
 
@@ -35,13 +34,15 @@ enum FortalSearchFieldVariant {
 /// there is something to clear.
 ///
 /// The field is a [FortalTextField] of the same [size] and [variant], so the
-/// two share their height, frame, focus ring and disabled look. It has no
-/// label or helper text: [semanticLabel] names it.
+/// two share their height, frame and disabled look. [label] shows above the
+/// field; [semanticLabel] names it either way. The 18px search glyph is muted
+/// at rest and takes the text color while the field is focused or filled.
 ///
 /// The clear button shows while the field is enabled, editable and not
-/// empty. It sits over the field's end, centered in the last 40px so its
-/// whole 40px target is inside the field, and the text area always stops
-/// where that target starts. Pressing it clears the text, reports `onChanged('')` and
+/// empty. Its 24px circle sits in a slot the field always reserves at its
+/// end, so the text never moves; the circle grows in from 0.8 out of a 2px
+/// blur and shrinks back when the field empties. Its 40px target is inside
+/// the field, and the text area always stops where that target starts. Pressing it clears the text, reports `onChanged('')` and
 /// [onCleared], and returns focus to the field. It is its own semantics node
 /// and takes no Tab stop. Escape clears an editable, nonempty field and
 /// consumes that press through release. A press that starts during active
@@ -62,6 +63,7 @@ class FortalSearchField extends StatelessWidget {
     this.variant = .surface,
     this.size = .size2,
     required this.semanticLabel,
+    this.label,
     this.controller,
     this.focusNode,
     this.hintText,
@@ -77,11 +79,12 @@ class FortalSearchField extends StatelessWidget {
   }) : assert(semanticLabel != ''),
        assert(clearSemanticLabel != '');
 
-  /// The `gray2` fill inside a 1px neutral frame, with neutral text.
+  /// The surface fill inside a 1px strong frame.
   const FortalSearchField.surface({
     super.key,
     this.size = .size2,
     required this.semanticLabel,
+    this.label,
     this.controller,
     this.focusNode,
     this.hintText,
@@ -98,11 +101,12 @@ class FortalSearchField extends StatelessWidget {
        assert(semanticLabel != ''),
        assert(clearSemanticLabel != '');
 
-  /// An accent tint inside a 1px accent ring, with accent-colored text.
+  /// The muted surface fill with no frame until hovered or focused.
   const FortalSearchField.soft({
     super.key,
     this.size = .size2,
     required this.semanticLabel,
+    this.label,
     this.controller,
     this.focusNode,
     this.hintText,
@@ -124,6 +128,9 @@ class FortalSearchField extends StatelessWidget {
 
   /// The field's accessible name.
   final String semanticLabel;
+
+  /// The visible label above the field, or none.
+  final String? label;
 
   final TextEditingController? controller;
   final FocusNode? focusNode;
@@ -147,40 +154,19 @@ class FortalSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The field's own end padding and the spacing before a trailing widget,
-    // as the text field sets them for each size.
-    final (fieldSize, buttonSize, paddingX, spacing, glyph) = switch (size) {
-      .size1 => (
-        FortalTextFieldSize.size1,
-        FortalIconButtonSize.size1,
-        FortalTokens.space2,
-        FortalTokens.space2,
-        FortalTokens.space3,
-      ),
-      .size2 => (
-        FortalTextFieldSize.size2,
-        FortalIconButtonSize.size1,
-        FortalTokens.space2,
-        FortalTokens.space2,
-        FortalTokens.space3,
-      ),
-      .size3 => (
-        FortalTextFieldSize.size3,
-        FortalIconButtonSize.size2,
-        FortalTokens.space3,
-        FortalTokens.space3,
-        FortalTokens.space4,
-      ),
-    };
     final target = FortalTokens.touchTargetMin.resolve(context);
-    final inset = paddingX.resolve(context) + spacing.resolve(context);
-    // The input stops where the clear button's target starts, so a tap on
-    // the text never clears it, and at least one spacing step short of the
-    // glyph, as it would beside a trailing icon of that size.
-    final reserved = math.max(
-      target - inset,
-      target / 2 + glyph.resolve(context) / 2 - paddingX.resolve(context),
-    );
+    final slot = FortalTokens.space5.resolve(context);
+    final inset =
+        FortalTokens.space3.resolve(context) +
+        FortalTokens.borderWidth1.resolve(context);
+    // The clear target is centered on the slot, so the input stops where the
+    // target starts once the gap before the slot is counted.
+    final targetEnd = inset + slot / 2 - target / 2;
+    final fieldHeight = switch (size) {
+      .size1 => FortalTokens.controlHeight1,
+      .size2 => FortalTokens.controlHeight2,
+      .size3 => FortalTokens.controlHeight3,
+    }.resolve(context);
 
     return NakedSearchField(
       controller: controller,
@@ -197,9 +183,14 @@ class FortalSearchField extends StatelessWidget {
               .surface => .surface,
               .soft => .soft,
             },
-            size: fieldSize,
+            size: switch (size) {
+              .size1 => .size1,
+              .size2 => .size2,
+              .size3 => .size3,
+            },
             controller: field.controller,
             focusNode: field.focusNode,
+            label: label,
             hintText: hintText,
             semanticLabel: semanticLabel,
             enabled: field.enabled,
@@ -209,52 +200,101 @@ class FortalSearchField extends StatelessWidget {
             onChanged: field.onChanged,
             onSubmitted: onSubmitted,
             leading: const StyledIcon(icon: RemixIcons.search),
-            trailing: SizedBox(width: reserved),
-            style: style,
+            trailing: SizedBox(width: slot),
+            style: _glass(
+              filled: field.controller.text.isNotEmpty,
+            ).merge(style),
           ),
-          if (field.clear != null)
-            PositionedDirectional(
-              top: 0,
-              bottom: 0,
-              end: 0,
-              width: target,
-              // Its own semantics node. Merged into the node around the
-              // field, the button would make that node a button once there
-              // is text, and on the web the browser then drops the input
-              // focus the field's editor hangs from.
-              child: Semantics(
-                container: true,
-                child: Center(
-                  // Inside the field's tap region, so pressing it does not
-                  // count as a tap outside the field.
-                  child: TextFieldTapRegion(
-                    child: ExcludeFocus(
-                      child: FortalIconButton.ghost(
-                        icon: RemixIcons.close,
-                        semanticLabel: clearSemanticLabel,
-                        size: buttonSize,
-                        onPressed: field.clear,
-                        style: _clearStyle(variant),
+          PositionedDirectional(
+            // Without a label the field is the whole stack, which keeps the
+            // button centered as text scaling grows the field.
+            top: label == null ? 0 : null,
+            bottom: 0,
+            end: targetEnd,
+            width: target,
+            height: label == null ? null : fieldHeight,
+            // Its own semantics node. Merged into the node around the field,
+            // the button would make that node a button once there is text,
+            // and on the web the browser then drops the input focus the
+            // field's editor hangs from.
+            child: FortalSwap(
+              motion: _clearMotion,
+              alignment: AlignmentDirectional.center,
+              child: field.clear == null
+                  ? const SizedBox.shrink(key: ValueKey('empty'))
+                  : Semantics(
+                      key: const ValueKey('clear'),
+                      container: true,
+                      child: Center(
+                        // Inside the field's tap region, so pressing it does
+                        // not count as a tap outside the field.
+                        child: TextFieldTapRegion(
+                          child: ExcludeFocus(
+                            child: FortalIconButton.ghost(
+                              icon: RemixIcons.close,
+                              semanticLabel: clearSemanticLabel,
+                              size: .size1,
+                              onPressed: field.clear,
+                              style: _clearStyle(),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ),
             ),
+          ),
         ],
       ),
     );
   }
 }
 
-/// The clear button takes the field's icon color: gray on a surface field,
-/// with a gray tint under the pointer, and the accent on a soft one.
-IconButtonStyler _clearStyle(FortalSearchFieldVariant variant) =>
-    switch (variant) {
-      .surface =>
-        IconButtonStyler()
-            .icon(.color(FortalTokens.gray11()))
-            .onHovered(.color(FortalTokens.grayA3()))
-            .onPressed(.color(FortalTokens.grayA4())),
-      .soft => IconButtonStyler().icon(.color(FortalTokens.accentContent())),
-    };
+/// The search glyph: 18px, muted at rest and the text color while the field
+/// is focused or [filled].
+TextFieldStyler _glass({required bool filled}) {
+  final glass = TextFieldStyler().wrap(
+    .iconTheme(size: FortalTokens.space18()),
+  );
+  final awake = TextFieldStyler().wrap(
+    .iconTheme(color: FortalTokens.gray12()),
+  );
+
+  return filled ? glass.merge(awake) : glass.onFocused(awake);
+}
+
+/// The clear button: a 24px circle with a 16px muted glyph that takes the
+/// muted fill and the text color under the pointer, and presses in to 0.96.
+IconButtonStyler _clearStyle() => IconButtonStyler()
+    .padding(.all(FortalTokens.space1()))
+    .margin(.all(0))
+    .borderRadius(.all(FortalTokens.radiusCircle()))
+    .icon(.size(FortalTokens.space4()).color(FortalTokens.gray10()))
+    .onHovered(
+      IconButtonStyler()
+          .color(FortalTokens.gray3())
+          .icon(.color(FortalTokens.gray12())),
+    )
+    .onPressed(IconButtonStyler().wrap(.scale(x: 0.96, y: 0.96)))
+    .animate(
+      AnimationConfig.curve(
+        duration: FortalMotion.fast,
+        curve: FortalMotion.easeStandard,
+      ),
+    );
+
+/// The clear button grows in from 0.8 out of a 2px blur, its scale on the
+/// snappy spring and its fade over 150ms, and leaves the same way in 100ms.
+const _clearMotion = FortalSwapMotion(
+  enter: FortalSwapPhase(
+    visual: FortalVisual(opacity: 0, scale: 0.8, blur: FortalMotion.blurSubtle),
+    timing: FortalVisualTiming(
+      opacity: FortalTiming.fade,
+      transform: FortalTiming.snappy,
+      blur: FortalTiming.fade,
+    ),
+  ),
+  exit: FortalSwapPhase(
+    visual: FortalVisual(opacity: 0, scale: 0.8, blur: FortalMotion.blurSubtle),
+    timing: FortalVisualTiming.all(FortalTiming.instant),
+  ),
+);

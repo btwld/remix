@@ -25,10 +25,23 @@ void main() {
 
   group('geometry', () {
     for (final (size, fieldSize, height, paddingY, glyph) in const [
-      // Vertical padding is (height - line box) / 2 at 1x: 3.6, 6.9, 9.5.
-      (FortalSearchFieldSize.size1, FortalTextFieldSize.size1, 24.2, 3.6, 12.0),
-      (FortalSearchFieldSize.size2, FortalTextFieldSize.size2, 32.0, 6.9, 12.0),
-      (FortalSearchFieldSize.size3, FortalTextFieldSize.size3, 40.0, 9.5, 16.0),
+      // Vertical padding is (height - line box) / 2 at 1x, against the 14px
+      // line box the engine lays out on 20px: 6, 10 and 12.
+      (FortalSearchFieldSize.size1, FortalTextFieldSize.size1, 32.0, 6.0, 16.0),
+      (
+        FortalSearchFieldSize.size2,
+        FortalTextFieldSize.size2,
+        40.0,
+        10.0,
+        16.0,
+      ),
+      (
+        FortalSearchFieldSize.size3,
+        FortalTextFieldSize.size3,
+        44.0,
+        12.0,
+        16.0,
+      ),
     ]) {
       for (final variant in FortalSearchFieldVariant.values) {
         for (final scale in [1.0, 2.0]) {
@@ -59,7 +72,8 @@ void main() {
                     ),
                     textDirection: direction,
                   );
-                  await tester.pump();
+                  // The clear button leaves with a short exit.
+                  await tester.pumpAndSettle();
                   expectFortalTextInputGeometry(
                     tester,
                     scale: scale,
@@ -88,8 +102,8 @@ void main() {
         }
       }
 
-      testWidgets('${size.name} centers a 40px clear target in the field '
-          'end, clear of the text', (tester) async {
+      testWidgets('${size.name} centers a 40px clear target on the 24px '
+          'slot at the field end, clear of the text', (tester) async {
         for (final direction in TextDirection.values) {
           final controller = TextEditingController(text: 'Mar');
           addTearDown(controller.dispose);
@@ -112,16 +126,19 @@ void main() {
 
           expect(target.size, const Size.square(40));
           expect(target.center.dy, closeTo(field.center.dy, 0.01));
+          // The slot ends at the field's 13px inset, so its center is 25px in.
           expect(
-            rtl ? target.left : target.right,
-            rtl ? field.left : field.right,
+            rtl
+                ? target.center.dx - field.left
+                : field.right - target.center.dx,
+            closeTo(25, 0.01),
           );
           expect(icon.size, Size.square(glyph));
           expect(icon.center, target.center);
           // The editor stops where the clear target starts, at least a
           // spacing step short of the glyph, so a tap on the text never
           // lands on the button.
-          final spacing = size == .size3 ? 12.0 : 8.0;
+          const spacing = 8.0;
           expect(
             rtl ? editor.left - target.right : target.left - editor.right,
             closeTo(0, 0.01),
@@ -132,7 +149,7 @@ void main() {
           );
           // The leading glyph keeps the field's own inset.
           final search = tester.getRect(find.byIcon(RemixIcons.search));
-          final inset = size == .size3 ? 12.0 : 8.0;
+          const inset = 13.0;
           expect(
             rtl ? field.right - search.right : search.left - field.left,
             inset,
@@ -178,6 +195,7 @@ void main() {
 
       tester.testTextInput.enterText('');
       await tester.pump();
+      await tester.pump(_clearExit);
       expect(find.byType(FortalIconButton), findsNothing);
       expect(
         tester.state<EditableTextState>(find.byType(EditableText)),
@@ -218,6 +236,8 @@ void main() {
 
       tester.testTextInput.enterText('o');
       await tester.pump();
+      // The clear button fades in from nothing, which hides it for one frame.
+      await tester.pump(const Duration(milliseconds: 16));
 
       final typed = tester.getSemantics(find.byType(EditableText));
       expect(typed.id, field.id);
@@ -273,6 +293,7 @@ void main() {
         ),
       );
 
+      await tester.pump(_clearExit);
       expect(find.byType(FortalIconButton), findsNothing);
       await tester.enterText(find.byType(EditableText), 'mar');
       await tester.pump();
@@ -289,6 +310,7 @@ void main() {
       expect(changes, ['mar', '']);
       expect(cleared, 1);
       expect(_editable(tester).focusNode.hasFocus, isTrue);
+      await tester.pump(_clearExit);
       expect(find.byType(FortalIconButton), findsNothing);
     });
 
@@ -405,6 +427,7 @@ void main() {
       expect(_editable(tester).focusNode, same(focusNode));
       expect(focusNode.hasFocus, isTrue);
       expect(_editable(tester).controller, same(second));
+      await tester.pump(_clearExit);
       expect(find.byType(FortalIconButton), findsNothing);
       second.text = 'two';
       await tester.pump();
@@ -449,6 +472,7 @@ void main() {
           ),
         );
 
+        await tester.pump(_clearExit);
         expect(find.byType(FortalIconButton), findsNothing);
         await tester.tap(find.byType(EditableText), warnIfMissed: enabled);
         await tester.pump();
@@ -606,8 +630,8 @@ void main() {
       expect(dismissed, 1);
     });
 
-    testWidgets('the clear button is no Tab stop, and the field rings on '
-        'focus', (tester) async {
+    testWidgets('the clear button is no Tab stop, and focus darkens the '
+        'frame without a ring', (tester) async {
       await tester.pumpRemixApp(
         Column(
           mainAxisSize: MainAxisSize.min,
@@ -625,15 +649,21 @@ void main() {
       );
 
       await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-      await tester.pump();
+      // The frame eases to its focused color.
+      await tester.pumpAndSettle();
       expect(_editable(tester).focusNode.hasFocus, isTrue);
       final effects = tester
           .resolvedSpecOf<TextFieldSpec>(find.byType(EditableText))
           .containerEffects;
-      expect(effects?.outline.width, 2);
       expect(
-        effects?.outline.color,
-        FortalTokens.focus8.resolve(tester.element(find.byType(EditableText))),
+        effects == null ||
+            effects.outline.style == BorderStyle.none ||
+            effects.outline.color.a == 0,
+        isTrue,
+      );
+      expect(
+        effects?.overContent?.shadows.single.color,
+        FortalTokens.gray12.resolve(tester.element(find.byType(EditableText))),
       );
 
       await tester.sendKeyEvent(LogicalKeyboardKey.tab);
@@ -667,8 +697,8 @@ void main() {
   group('colour and style', () {
     for (final mode in const [FortalThemeMode.light, FortalThemeMode.dark]) {
       for (final variant in FortalSearchFieldVariant.values) {
-        testWidgets('${variant.name} ${mode.name} takes the text field look '
-            'and a matching clear glyph', (tester) async {
+        testWidgets('${variant.name} ${mode.name} takes the text field look, '
+            'a muted clear glyph and a woken search glyph', (tester) async {
           final controller = TextEditingController(text: 'mar');
           addTearDown(controller.dispose);
           await tester.pumpRemixApp(
@@ -694,24 +724,67 @@ void main() {
             expected.container.spec.decoration,
           );
           final glyph = tester.widget<Icon>(find.byIcon(RemixIcons.close));
+          expect(glyph.color, FortalTokens.gray10.resolve(context));
           expect(
-            glyph.color,
-            (variant == .surface
-                    ? FortalTokens.gray11
-                    : FortalTokens.accentContent)
-                .resolve(context),
-          );
-          expect(
-            tester.getSize(find.byIcon(RemixIcons.search)),
+            tester.getSize(find.byIcon(RemixIcons.close)),
             const Size.square(16),
           );
           expect(
+            tester.getSize(find.byIcon(RemixIcons.search)),
+            const Size.square(18),
+          );
+          // A filled field wakes the search glyph to the text color.
+          expect(
             IconTheme.of(tester.element(find.byIcon(RemixIcons.search))).color,
-            glyph.color,
+            FortalTokens.gray12.resolve(context),
           );
         });
       }
     }
+
+    testWidgets('a label shows above the field, and the glass rests muted '
+        'until focused', (tester) async {
+      await tester.pumpRemixApp(
+        const SizedBox(
+          width: 320,
+          child: FortalSearchField(label: 'Search', semanticLabel: 'Search'),
+        ),
+      );
+      final context = tester.element(find.byType(EditableText));
+      Color? glass() =>
+          IconTheme.of(tester.element(find.byIcon(RemixIcons.search))).color;
+
+      expect(
+        tester.getRect(find.text('Search')).bottom,
+        lessThanOrEqualTo(_chrome(tester).top - 8),
+      );
+      expect(glass(), FortalTokens.gray10.resolve(context));
+      await tester.tap(find.byType(EditableText));
+      await tester.pumpAndSettle();
+      expect(glass(), FortalTokens.gray12.resolve(context));
+    });
+
+    testWidgets('the clear button lingers through its 100ms exit', (
+      tester,
+    ) async {
+      final controller = TextEditingController(text: 'mar');
+      addTearDown(controller.dispose);
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 320,
+          child: FortalSearchField(
+            semanticLabel: 'Search',
+            controller: controller,
+          ),
+        ),
+      );
+      controller.clear();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(find.byType(FortalIconButton), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 60));
+      expect(find.byType(FortalIconButton), findsNothing);
+    });
 
     testWidgets('a caller style merges last into the field', (tester) async {
       const fill = Color(0xFF123456);
@@ -781,6 +854,7 @@ void main() {
         expect(calls, ['change:', 'clear']);
         expect(tester.state<EditableTextState>(field), same(editor));
         expect(editor.widget.focusNode.hasFocus, isTrue);
+        await tester.pump(_clearExit);
         expect(clear, findsNothing);
         expect(
           tester.getSemantics(field),
@@ -805,3 +879,6 @@ Rect _chrome(WidgetTester tester) => tester.getRect(
       )
       .first,
 );
+
+/// How long the clear button takes to leave.
+const _clearExit = Duration(milliseconds: 100);
