@@ -2020,18 +2020,12 @@ void main() {
           await tester.tap(firstRowCheckbox);
           await tester.pumpAndSettle();
           expect(find.text('1 selected'), findsOneWidget);
-          expect(
-            _glyphIn(headerCheckbox, RemixPathGlyph.thickDividerHorizontal),
-            findsOneWidget,
-          );
+          expect(tester.widget<RemixCheckbox>(headerCheckbox).selected, isNull);
 
           await tester.tap(headerCheckbox);
           await tester.pumpAndSettle();
           expect(find.text('10 selected'), findsOneWidget);
-          expect(
-            _glyphIn(headerCheckbox, RemixPathGlyph.thickCheck),
-            findsOneWidget,
-          );
+          expect(tester.widget<RemixCheckbox>(headerCheckbox).selected, isTrue);
 
           expect(find.text('1–10 of 24'), findsOneWidget);
           await tester.tap(
@@ -2098,14 +2092,11 @@ void main() {
             );
 
             final checkbox = find.byType(RemixCheckbox);
-            expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsNothing);
+            expect(tester.widget<RemixCheckbox>(checkbox).selected, isFalse);
             await tester.ensureVisible(checkbox);
             await tester.tap(checkbox);
             await tester.pumpAndSettle();
-            expect(
-              _glyphIn(checkbox, RemixPathGlyph.thickCheck),
-              findsOneWidget,
-            );
+            expect(tester.widget<RemixCheckbox>(checkbox).selected, isTrue);
 
             final dangerZone = find
                 .byKey(const ValueKey('settings-danger-zone'))
@@ -2431,11 +2422,11 @@ void main() {
       await _openFortalTab(tester, 'notifications');
       final checkbox = find.byType(RemixCheckbox);
       expect(checkbox, findsOneWidget);
-      expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsNothing);
+      expect(tester.widget<RemixCheckbox>(checkbox).selected, isFalse);
       await tester.ensureVisible(checkbox);
       await tester.tap(checkbox);
       await tester.pumpAndSettle();
-      expect(_glyphIn(checkbox, RemixPathGlyph.thickCheck), findsOneWidget);
+      expect(tester.widget<RemixCheckbox>(checkbox).selected, isTrue);
       expect(tester.takeException(), isNull);
 
       semantics.dispose();
